@@ -1,0 +1,72 @@
+-- Tabla USUARIOS
+CREATE TABLE usuarios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(20) NOT NULL,
+  correo VARCHAR(20) NOT NULL,
+  contrasena VARCHAR(20) NOT NULL,
+  tipo VARCHAR(20) NOT NULL
+);
+
+-- Tabla EXAMENES
+CREATE TABLE examenes (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_maestro INT UNSIGNED NOT NULL,
+  titulo VARCHAR(40) NOT NULL,
+  descripcion VARCHAR(150),
+  fecha DATETIME NOT NULL,
+  
+  FOREIGN KEY (id_maestro) 
+  REFERENCES usuarios(id) 
+    ON UPDATE RESTRICT 
+    ON DELETE RESTRICT
+);
+
+-- Tabla PREGUNTAS
+CREATE TABLE preguntas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_examen INT UNSIGNED NOT NULL,
+  titulo VARCHAR(40) NOT NULL,
+  descripcion VARCHAR(150),
+  tipo_respuestas VARCHAR(20) NOT NULL,
+  respuesta_correcta VARCHAR(150),
+  obligatoria BOOLEAN NOT NULL,
+  fecha DATETIME NOT NULL,
+  
+  FOREIGN KEY (id_examen) 
+  REFERENCES examenes(id) 
+    ON UPDATE RESTRICT 
+    ON DELETE RESTRICT
+);
+
+-- Tabla OPCIONES DE PREGUNTAS
+CREATE TABLE opciones_preguntas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_pregunta INT UNSIGNED NOT NULL,
+  opcion VARCHAR(70) NOT NULL,
+  correcta BOOLEAN DEFAULT FALSE, 
+  
+  FOREIGN KEY (id_pregunta) 
+  REFERENCES preguntas(id) 
+    ON UPDATE RESTRICT 
+    ON DELETE RESTRICT
+);
+
+
+-- Tabla RESPUESTAS
+CREATE TABLE respuestas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_pregunta INT UNSIGNED NOT NULL,
+  id_usuario INT UNSIGNED NOT NULL,
+  respuesta VARCHAR(150) NOT NULL,
+  fecha DATETIME NOT NULL,
+  
+  FOREIGN KEY (id_pregunta) 
+  REFERENCES preguntas(id) 
+    ON UPDATE RESTRICT 
+    ON DELETE RESTRICT,
+  
+  FOREIGN KEY (id_usuario) 
+  REFERENCES usuarios(id) 
+    ON UPDATE RESTRICT 
+    ON DELETE RESTRICT
+);
