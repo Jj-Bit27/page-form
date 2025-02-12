@@ -1,3 +1,4 @@
+/* Importamos las bibliotecas */
 import { forwardRef } from "react";
 import {
   Root,
@@ -13,6 +14,7 @@ import { cva } from "class-variance-authority";
 import { IoClose } from "react-icons/io5";
 import { cn } from "../../lib/utils";
 
+/* Creamos el componente Sheet */
 const Sheet = Root;
 const SheetTrigger = Trigger;
 const SheetClose = Close;
@@ -25,7 +27,7 @@ SheetPortal.displayName = Portal.displayName;
 const SheetOverlay = forwardRef(({ className, ...props }, ref) => (
   <Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-gray-300 dark:text-white dark:bg-zinc-800 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -35,7 +37,7 @@ const SheetOverlay = forwardRef(({ className, ...props }, ref) => (
 SheetOverlay.displayName = Overlay.displayName;
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  "fixed z-50 gap-4 bg-background dark:text-white p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
   {
     variants: {
       side: {
@@ -63,7 +65,7 @@ const SheetContent = forwardRef(
         {...props}
       >
         {children}
-        <Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary dark:text-white">
+        <Close className="absolute right-4 top-4 rounded-sm opacity-70  transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary dark:text-white">
           <IoClose size={20} />
           <span className="sr-only">Close</span>
         </Close>
@@ -98,18 +100,14 @@ SheetFooter.displayName = "SheetFooter";
 const SheetTitle = forwardRef(({ className, ...props }, ref) => (
   <Title
     ref={ref}
-    className={cn("text-lg font-semibold text-foreground", className)}
+    className={cn("text-lg font-semibold", className)}
     {...props}
   />
 ));
 SheetTitle.displayName = Title.displayName;
 
 const SheetDescription = forwardRef(({ className, ...props }, ref) => (
-  <Description
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
+  <Description ref={ref} className={cn("text-sm", className)} {...props} />
 ));
 SheetDescription.displayName = Description.displayName;
 

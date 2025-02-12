@@ -72,11 +72,13 @@ const HomePage = () => {
           {formularios?.map((form) => (
             <div
               key={form.id}
-              className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-2xl hover:shadow-xl transition duration-200 cursor-pointer"
+              className="dark:bg-zinc-800 dark:text-white bg-gray-200 text-black shadow-zinc-500 dark:shadow-zinc-700 p-6 rounded-xl shadow-xl hover:shadow-2xl transition duration-200 cursor-pointer"
               onClick={() => handleFormClick(form.id)}
             >
               <h2 className="text-xl font-bold mb-2">{form.titulo}</h2>
-              <p className="text-gray-600">{form.descripcion}</p>
+              <p className="text-gray-600 dark:text-gray-300">
+                {form.descripcion}
+              </p>
 
               <div className="flex gap-2 mt-4">
                 {user.isProfessor === true ? (
@@ -85,7 +87,7 @@ const HomePage = () => {
                     <Link
                       to={`/editar-formulario/${form.id}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                      className="px-3 py-1 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
                     >
                       Editar
                     </Link>
@@ -96,7 +98,7 @@ const HomePage = () => {
                         e.stopPropagation();
                         handleEliminar(form.id);
                       }}
-                      className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
+                      className="px-3 py-1 bg-red-500 text-white rounded-xl hover:bg-red-600"
                     >
                       Eliminar
                     </button>
@@ -104,7 +106,7 @@ const HomePage = () => {
                 ) : (
                   <Link
                     to={`/formulario/${form.id}`}
-                    className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                    className="px-3 py-1 bg-green-500 text-white rounded-xl hover:bg-green-600"
                   >
                     Responder
                   </Link>
@@ -127,7 +129,7 @@ const HomePage = () => {
           ) : (
             <Link
               to="/home"
-              className="bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-600 transition duration-200"
+              className="bg-emerald-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition duration-200"
             >
               Responder Formulario
             </Link>

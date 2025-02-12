@@ -3,7 +3,7 @@ import QuestionDisplay from "./QuestionDisplay";
 
 export function ExamDisplay({ titulo, descripcion, preguntas, opciones }) {
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div className="w-full max-w-4xl mx-auto dark:bg-zinc-800 dark:text-white bg-gray-200 text-black p-6 rounded-xl shadow-lg shadow-zinc-500 dark:shadow-zinc-700">
       {/* Encabezado del examen */}
       <div className="mb-4">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">

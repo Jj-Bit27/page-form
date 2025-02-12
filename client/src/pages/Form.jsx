@@ -18,10 +18,8 @@ function Home() {
         const { data: dataExam } = await getExamnRequest(params.id);
         setExam(dataExam);
         const { data: dataQuestion } = await getQuestionsRequest(dataExam.id);
-        console.log(dataQuestion.result);
         setQuestions(dataQuestion.result);
         const { data: dataOptions } = await getOptionsRequest(dataQuestion.id);
-        console.log(dataOptions.result);
         setOptions(dataOptions.result);
       }
     };

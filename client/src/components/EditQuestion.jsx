@@ -1,3 +1,4 @@
+/* Importamos las bibliotecas */
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext.jsx";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,6 +8,7 @@ import { getExamnRequest } from "../api/examns.js";
 import { getOptionsRequest } from "../api/options.js";
 
 export default function Formulario() {
+  /* Variables, estados y navegar en la pagina */
   const navigate = useNavigate();
   const { user } = useAuth();
   const [title, setTitle] = useState("");
@@ -14,6 +16,7 @@ export default function Formulario() {
   const [questions, setQuestions] = useState([]);
   const { id } = useParams();
 
+  /* Funciones para manejar el formulario */
   useEffect(() => {
     const fetchFormData = async () => {
       try {
