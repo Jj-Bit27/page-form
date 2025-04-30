@@ -1,7 +1,7 @@
 import axios from "./axios";
 
 /* Funcion para pedir al servidor las respuestas */
-export const getAnswersRequest = async () => axios.get(`/answer/gets/${id_pregunta}/${id_usuario}`);
+export const getAnswersRequest = async (id_examen) => axios.get(`/answer/gets/${id_examen}`);
 
 /* Funcion para agregar mediante el servidor una respuesta */
 export const addAnswerRequest = async (data) => axios.post(`/answer/add`, data);

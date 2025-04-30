@@ -27,7 +27,7 @@ export const register = async (req, res) => {
     );
 
     const token = await createAccessToken({
-      id: result.id,
+      id: result.insertId,
     });
 
     res.cookie("token", token, {
@@ -90,25 +90,29 @@ export const login = async (req, res) => {
 
 /* Modulo de verificar el token del usuario */
 export const verifyToken = async (req, res) => {
-  const { token } = req.cookies;
-  if (!token) return res.send(false);
+  try {
+    const { token } = req.cookies;
+    if (!token) return res.send(false);
 
-  jwt.verify(token, TOKEN_SECRET, async (error, user) => {
-    if (error) return res.sendStatus(401);
+    jwt.verify(token, TOKEN_SECRET, async (error, user) => {
+      if (error) return res.sendStatus(401);
 
-    const [[userFound]] = await pool.query("SELECT * FROM usuarios WHERE id = ?", [
-      user.id,
-    ]
-    )
-    if (!userFound) return res.sendStatus(401);
+      const [[userFound]] = await pool.query("SELECT * FROM usuarios WHERE id = ?", [
+        user.id,
+      ]
+      )
+      if (!userFound) return res.sendStatus(401);
 
-    return res.json({
-      id: userFound.id,
-      name: userFound.nombre,
-      email: userFound.correo,
-      isProfessor: userFound.tipo === "1" ? true : false,
+      return res.json({
+        id: userFound.id,
+        name: userFound.nombre,
+        email: userFound.correo,
+        isProfessor: userFound.tipo === "1" ? true : false,
+      });
     });
-  });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /* Modulo de cerrar la session del usuario */

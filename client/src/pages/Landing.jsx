@@ -1,61 +1,82 @@
+import { FaWpforms } from "react-icons/fa";
 import { Button } from "../components/UI/Button.jsx";
-import { Link } from "react-router-dom";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { FiFileText } from "react-icons/fi";
-import { GoZap } from "react-icons/go";
 import { useAuth } from "../context/authContext.jsx";
+import { FeatureCard } from "../components/FeatureCard.jsx";
+import { Link } from "react-router-dom";
 
-export default function Home() {
-  const { isAuthenticated } = useAuth();
+function Home() {
+  const { isAuthenticated, logout } = useAuth();
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center p-6 text-center background-slate-800">
-      <h1 className="text-5xl font-extrabold mb-6 dark:bg-gray-300 bg-black bg-gradient-to-r from-primary to-purple-600 text-transparent bg-clip-text">
-        FormApp
-      </h1>
-      <p className="text-xl mb-8 max-w-2xl">
-        Crea, comparte y analiza formularios con facilidad. Tu solución todo en
-        uno para encuestas y recopilación de datos.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4 mb-12">
-        <Button
-          asChild="true"
-          className="font-semibold h-11 rounded-md px-8 bg-slate-900 dark:bg-gray-300 text-white dark:text-black"
-        >
-          <Link
-            to={isAuthenticated ? "/create-form" : "/login"}
-            className="flex items-center "
-          >
-            Crear Formulario <FaArrowRightLong className="ml-2" size={15} />
-          </Link>
-        </Button>
-        <Button
-          asChild="true"
-          className="font-semibold h-11 rounded-md px-8 border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-        >
-          <Link to="/">Documentacion</Link>
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl w-full">
-        <div className="flex items-center space-x-4 p-4 border rounded-xl bg-card">
-          <FiFileText className="h-8 w-8 text-primary" />
-          <div className="text-left">
-            <h3 className="font-bold">Formularios Personalizables</h3>
-            <p className="text-sm text-muted-foreground">
-              Diseña formularios únicos que se ajusten a tus necesidades
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+      <div className="container mx-auto px-4 py-16">
+        <header className="mb-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FaWpforms className="text-3xl text-purple-600" />
+            <h1 className="text-2xl font-bold text-gray-800">FormCreator</h1>
+          </div>
+          <div className="flex gap-4">
+            {isAuthenticated ? (
+              <Link to="/" onClick={() => logout()}>
+                <Button variant="outline">Cerrar Sesión</Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/login" className=" hover:text-primary">
+                  <Button variant="outline">Iniciar Sesión</Button>
+                </Link>
+                <Link to="/register" className=" hover:text-primary">
+                  <Button>Registrarse</Button>
+                </Link>
+              </>
+            )}
+          </div>
+        </header>
+
+        <main className="flex flex-col items-center">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-5xl font-bold text-gray-800">
+              Crea formularios fácilmente
+            </h2>
+            <p className="mx-auto max-w-2xl text-xl text-gray-600">
+              Diseña, comparte y analiza formularios de manera sencilla.
+              Perfecto para encuestas, exámenes y recopilación de datos.
             </p>
           </div>
-        </div>
-        <div className="flex items-center space-x-4 p-4 border rounded-xl bg-card">
-          <GoZap className="h-8 w-8 text-primary" />
-          <div className="text-left">
-            <h3 className="font-bold">Análisis en Tiempo Real</h3>
-            <p className="text-sm text-muted-foreground">
-              Obtén insights instantáneos de las respuestas recibidas
-            </p>
+
+          <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+            <FeatureCard
+              title="Diseño Intuitivo"
+              description="Crea formularios profesionales sin conocimientos técnicos"
+              icon="✏️"
+            />
+            <FeatureCard
+              title="Análisis de Respuestas"
+              description="Visualiza y exporta los resultados de tus formularios"
+              icon="📊"
+            />
+            <FeatureCard
+              title="Compartir Fácilmente"
+              description="Distribuye tus formularios con un simple enlace"
+              icon="🔗"
+            />
           </div>
-        </div>
+
+          {isAuthenticated ? (
+            <Link to="/dashboard">
+              <Button size="large">Comenzar Ahora</Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/register" className=" hover:text-primary">
+                <Button size="large">Comenzar Ahora</Button>
+              </Link>
+            </>
+          )}
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
+
+export default Home;

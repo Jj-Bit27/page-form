@@ -3,8 +3,8 @@ import { pool } from '../db/db.js';
 /* Obtener todas las respuestas */
 export const getAnswers = async (req, res) => {
   try {
-    const { id_pregunta, id_usuario } = req.params;
-    const [result] = await pool.query("SELECT * FROM respuestas WHERE id_pregunta = ? AND id_usuario = ?", [id_pregunta, id_usuario]);
+    const { id_examen } = req.params;
+    const [result] = await pool.query("SELECT * FROM respuestas WHERE id_examen = ?", [id_examen]);
     res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -26,13 +26,27 @@ export const getAnswer = async (req, res) => {
 /* Añadir una respuesta */
 export const addAnswer = async (req, res) => {
   try {
-    const { id_pregunta, id_usuario, respuesta, fecha } = req.body;
-    const [result] = await pool.query(
-      "INSERT INTO respuestas (id_pregunta, id_usuario, respuesta, fecha) VALUES (?, ?, ?, ?)",
-      [id_pregunta, id_usuario, respuesta, fecha]
-    );
-    res.status(201).json({ id: result.insertId, id_pregunta, id_usuario, respuesta, fecha });
+    const { id_examen, id_estudiante, respuestas } = req.body;
+    console.log(req.body)
+
+    if (!id_examen || !id_estudiante || !Array.isArray(respuestas)) {
+      return res.status(400).json({ message: "id_examen, id_estudiante y respuestas son requeridos" });
+    }
+
+    const insertedResponses = [];
+
+    for (const respuesta of respuestas) {
+      const { id_pregunta, respuesta: respuestaTexto } = respuesta;
+      const [result] = await pool.query(
+        "INSERT INTO respuestas (id_examen, id_pregunta, id_estudiante, respuesta, fecha) VALUES (?, ?, ?, ?, ?)",
+        [id_examen, id_pregunta, id_estudiante, respuestaTexto, new Date().toISOString().slice(0, 19).replace("T", " ")]
+      );
+      insertedResponses.push({ id: result.insertId, id_pregunta, respuesta: respuestaTexto });
+    }
+
+    res.status(201).json(insertedResponses);
   } catch (error) {
+    console.error("Error al guardar respuestas:", error);
     return res.status(500).json({ message: error.message });
   }
 };

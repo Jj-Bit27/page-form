@@ -44,21 +44,25 @@ export const getQuestion = async (req, res) => {
 export const addQuestion = async (req, res) => {
   try {
     const { id_examen, preguntas } = req.body;
+    let preguntasIds = []
 
-    preguntas.forEach(async (pregunta) => {
-      const { titulo, descripcion, tipo_respuesta, respuesta_correcta, obligatorio } = pregunta;
+    for (const pregunta of preguntas) {
+      const { title, type, correctAnswers, required } = pregunta;
       const [result] = await pool.query(
-        "INSERT INTO preguntas (id_examen, titulo, descripcion, tipo_respuestas, respuesta_correcta, obligatoria, fecha)  VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [id_examen, titulo, descripcion, tipo_respuesta, respuesta_correcta, obligatorio, new Date().toISOString().slice(0, 19).replace("T", " ")]
+        "INSERT INTO preguntas (id_examen, titulo, tipo_respuestas, respuesta_correcta, obligatoria, fecha)  VALUES (?, ?, ?, ?, ?, ?)",
+        [id_examen, title, type, correctAnswers, required, new Date().toISOString().slice(0, 19).replace("T", " ")]
       );
-    });
+      preguntasIds.push(result.insertId);
+    }
 
     res.json({
-      message: "Pregunta añadida correctamente",
+      preguntasIds
     }).status(201);
 
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ message: error.message });
+
   }
 };
 
@@ -66,8 +70,7 @@ export const addQuestion = async (req, res) => {
 export const editQuestion = async (req, res) => {
   try {
     const { id } = req.params
-    console.log(req.body)
-    const { id_examen, titulo, descripcion, tipo_respuestas, respuesta_correcta, obligatoria, fecha } = req.body;
+    const { id_examen, title, type, correctAnswers, required } = req.body;
 
     const [resultados] = await pool.query("SELECT * FROM preguntas WHERE id = ?", [
       id,
@@ -78,18 +81,19 @@ export const editQuestion = async (req, res) => {
 
     const [result] = await pool.query(
       `UPDATE preguntas 
-      SET id_examen = ?, titulo = ?, descripcion = ?, tipo_respuestas = ?, respuesta_correcta = ?, obligatoria = ?, fecha = ?
+      SET id_examen = ?, titulo = ?, tipo_respuestas = ?, respuesta_correcta = ?, obligatoria = ?
       WHERE id = ?`,
-      [id_examen, titulo, descripcion, tipo_respuestas, respuesta_correcta, obligatoria, fecha, id]
+      [id_examen, title, type, correctAnswers, required, id]
     );
 
     res.json({
       id: result.insertId,
-      id_examen, titulo, descripcion, tipo_respuestas, respuesta_correcta, obligatoria, fecha
+      id_examen, title, type, correctAnswers, required
     }).status(201);
 
   } catch (error) {
     return res.status(500).json({ message: error.message });
+    console.log(error)
   }
 };
 

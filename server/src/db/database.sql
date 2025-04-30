@@ -1,9 +1,9 @@
 -- Tabla USUARIOS
 CREATE TABLE usuarios (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(20) NOT NULL,
-  correo VARCHAR(20) NOT NULL,
-  contrasena VARCHAR(20) NOT NULL,
+  nombre VARCHAR(200) NOT NULL,
+  correo VARCHAR(200) NOT NULL,
+  contrasena VARCHAR(200) NOT NULL,
   tipo VARCHAR(20) NOT NULL
 );
 
@@ -11,8 +11,8 @@ CREATE TABLE usuarios (
 CREATE TABLE examenes (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   id_maestro INT UNSIGNED NOT NULL,
-  titulo VARCHAR(40) NOT NULL,
-  descripcion VARCHAR(150),
+  titulo VARCHAR(200) NOT NULL,
+  descripcion VARCHAR(200),
   fecha DATETIME NOT NULL,
   
   FOREIGN KEY (id_maestro) 
@@ -25,8 +25,7 @@ CREATE TABLE examenes (
 CREATE TABLE preguntas (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   id_examen INT UNSIGNED NOT NULL,
-  titulo VARCHAR(40) NOT NULL,
-  descripcion VARCHAR(150),
+  titulo VARCHAR(100) NOT NULL,
   tipo_respuestas VARCHAR(20) NOT NULL,
   respuesta_correcta VARCHAR(150),
   obligatoria BOOLEAN NOT NULL,
@@ -42,7 +41,7 @@ CREATE TABLE preguntas (
 CREATE TABLE opciones_preguntas (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   id_pregunta INT UNSIGNED NOT NULL,
-  opcion VARCHAR(70) NOT NULL,
+  opcion VARCHAR(100) NOT NULL,
   correcta BOOLEAN DEFAULT FALSE, 
   
   FOREIGN KEY (id_pregunta) 
@@ -55,18 +54,21 @@ CREATE TABLE opciones_preguntas (
 -- Tabla RESPUESTAS
 CREATE TABLE respuestas (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_examen INT UNSIGNED NOT NULL,
   id_pregunta INT UNSIGNED NOT NULL,
-  id_usuario INT UNSIGNED NOT NULL,
-  respuesta VARCHAR(150) NOT NULL,
+  id_estudiante INT UNSIGNED NOT NULL,
+  respuesta TEXT,
   fecha DATETIME NOT NULL,
-  
-  FOREIGN KEY (id_pregunta) 
-  REFERENCES preguntas(id) 
-    ON UPDATE RESTRICT 
+
+  FOREIGN KEY (id_examen) REFERENCES examenes(id)
+      ON UPDATE RESTRICT
+      ON DELETE RESTRICT,
+
+  FOREIGN KEY (id_pregunta) REFERENCES preguntas(id)
+    ON UPDATE RESTRICT
     ON DELETE RESTRICT,
-  
-  FOREIGN KEY (id_usuario) 
-  REFERENCES usuarios(id) 
+
+  FOREIGN KEY (id_estudiante) REFERENCES usuarios(id)
     ON UPDATE RESTRICT 
     ON DELETE RESTRICT
 );

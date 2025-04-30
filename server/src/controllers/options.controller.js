@@ -28,13 +28,26 @@ export const getOption = async (req, res) => {
 export const addOption = async (req, res) => {
   try {
     const { id_pregunta } = req.params;
-    const { opciones, correcta } = req.body;
-    const [result] = await pool.query(
-      "INSERT INTO opciones_preguntas (id_pregunta, opcion, correcta) VALUES (?, ?, ?)",
-      [id_pregunta, opcion, correcta]
-    );
-    res.status(201).json({ id: result.insertId, id_pregunta, opcion, correcta });
+    const { preguntas } = req.body;
+    let insertedOptions = [];
+
+    preguntas.map(async (pregunta) => {
+      const { options, correctAnswers, id } = pregunta;
+      const insertedOptions = [];
+
+      for (const opcion of options) {
+        const correcta = Array.isArray(correctAnswers) && correctAnswers.includes(opcion);
+        const [result] = await pool.query(
+          "INSERT INTO opciones_preguntas (id_pregunta, opcion, correcta) VALUES (?, ?, ?)",
+          [id_pregunta, opcion, correcta]
+        );
+        insertedOptions.push({ id: result.insertId, id_pregunta, opcion, correcta });
+      }
+    })
+
+    res.status(201).json(insertedOptions);
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ message: error.message });
   }
 };
@@ -43,15 +56,16 @@ export const addOption = async (req, res) => {
 export const editOption = async (req, res) => {
   try {
     const { id } = req.params;
-    const { id_pregunta, opcion, correcta } = req.body;
+    const { opcion, correcta } = req.body;
     const [result] = await pool.query(
-      "UPDATE opciones_preguntas SET id_pregunta = ?, opcion = ?, correcta = ? WHERE id = ?",
-      [id_pregunta, opcion, correcta, id]
+      "UPDATE opciones_preguntas SET opcion = ?, correcta = ? WHERE id = ?",
+      [opcion, correcta, id]
     );
     if (result.affectedRows === 0) return res.status(404).json({ message: "Opción no encontrada" });
-    res.status(200).json({ id, id_pregunta, opcion, correcta });
+    res.status(200).json({ id, opcion, correcta });
   } catch (error) {
     return res.status(500).json({ message: error.message });
+    console.log(error)
   }
 };
 

@@ -1,33 +1,37 @@
 import { useState, useEffect } from "react";
-import { FaWpforms, FaEnvelope, FaLock } from "react-icons/fa";
-import { Button } from "../components/UI/Button.jsx";
-import { Input } from "../components/UI/Input.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authContext.jsx";
+import { useAuth } from "../context/authContext";
+import { FaWpforms, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { Button } from "../components/UI/Button";
+import { Input } from "../components/UI/Input";
+import { Checkbox } from "../components/UI/Checkbox";
 
-export default function LoginForm() {
+export default function RegisterForm() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signin, errors: loginErrors, isAuthenticated } = useAuth();
+  const [isProfessor, setIsProfessor] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { signup, errors: registerErrors, isAuthenticated } = useAuth();
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/dashboard");
-    }
-  }, [isAuthenticated]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const data = { email, password };
-    signin(data);
+
+    const value = { name, email, password, isProfessor };
+    await signup(value);
 
     setTimeout(() => {
       setLoading(false);
     }, 1500);
   };
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/dashboard");
+  }, [isAuthenticated]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 px-4">
@@ -38,15 +42,27 @@ export default function LoginForm() {
             <h1 className="text-2xl font-bold text-gray-800">FormCreator</h1>
           </a>
           <h2 className="mt-6 text-2xl font-bold text-gray-800">
-            Iniciar Sesión
+            Crear Cuenta
           </h2>
         </div>
-        {loginErrors.map((error, i) => (
-          <p className="text-sm text-red-500 mt-2 text-center" key={i}>
-            {error}
+        {registerErrors && (
+          <p className="text-sm text-red-500 mt-2 text-center">
+            {registerErrors}
           </p>
-        ))}
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <Input
+              label="Nombre Completo"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              icon={<FaUser />}
+              placeholder="Tu nombre"
+            />
+          </div>
+
           <div>
             <Input
               label="Correo Electrónico"
@@ -71,34 +87,26 @@ export default function LoginForm() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-700"
-              >
-                Recordarme
-              </label>
-            </div>
+          <div>
+            <Checkbox
+              id="is-teacher"
+              checked={isProfessor}
+              onChange={() => setIsProfessor(!isProfessor)}
+              label="Soy profesor (puedo crear formularios)"
+            />
           </div>
 
           <Button type="submit" fullWidth loading={loading}>
-            Iniciar Sesión
+            Registrarse
           </Button>
 
           <div className="mt-4 text-center text-sm text-gray-600">
-            ¿No tienes una cuenta?{" "}
+            ¿Ya tienes una cuenta?{" "}
             <a
-              href="/register"
+              href="/login"
               className="font-medium text-purple-600 hover:text-purple-500"
             >
-              Regístrate
+              Inicia Sesión
             </a>
           </div>
         </form>
